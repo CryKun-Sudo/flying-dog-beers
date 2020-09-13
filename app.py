@@ -60,6 +60,7 @@ update_i=0
 
 def upload_file_git(file_path):
 
+	global update_i
 
 	user = "CryKun-Sudo"
 	password = "Mmaladie123!!!"
@@ -1088,7 +1089,6 @@ def parse_contents(contents, filename):
 	
 	with open(os.path.join(UPLOAD_DIRECTORY, filename), "wb") as fp:
 		fp.write(base64.decodebytes(data))
-		upload_file_git("app_uploaded_files/%s"%filename)
 
 	decoded = base64.b64decode(content_string)
 	try:
@@ -1109,6 +1109,8 @@ def parse_contents(contents, filename):
    
 
 def prepare_xls(xls_file_path):
+
+	global update_i
 
 	xls = xlrd.open_workbook(r'%s'%(xls_file_path), on_demand=True)
 	sheet_list = xls.sheet_names()
@@ -1922,6 +1924,7 @@ def update_inter(data,columns):
 @app.callback([Output('output_save_fdc','children')],
 	[Input('save_stuf', 'n_clicks'),Input('table3','data'),Input('table3','columns')])
 def save_table3_fdc(n_clicks,data,columns):
+	global update_i
 	if n_clicks!=None:
 		table3 = pd.DataFrame.from_dict(data=data)
 		table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
@@ -1933,6 +1936,7 @@ def save_table3_fdc(n_clicks,data,columns):
 @app.callback([Output('output_save_ffr','children')],
 	[Input('save_stuf_ffr', 'n_clicks'),Input('table6','data'),Input('table6','columns')])
 def save_table6_ffr(n_clicks,data,columns):
+	global update_i
 	if n_clicks!=None:
 		table6 = pd.DataFrame.from_dict(data=data)
 		table6.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
