@@ -1088,6 +1088,7 @@ def parse_contents(contents, filename):
 	
 	with open(os.path.join(UPLOAD_DIRECTORY, filename), "wb") as fp:
 		fp.write(base64.decodebytes(data))
+		upload_file_git("app_uploaded_files/%s"%filename)
 
 	decoded = base64.b64decode(content_string)
 	try:
@@ -1131,7 +1132,7 @@ def prepare_xls(xls_file_path):
 		sheet1[col] = sheet1[col].astype(int)
 	sheet1.to_csv(os.path.join(LOCAL_DATA,"sheet1.csv"),index=False,encoding="utf-8")
 
-	upload_file_git(os.path.join(LOCAL_DATA,"sheet1.csv"))
+	upload_file_git("local_data/sheet1.csv")
 
 	return sheet1
 
@@ -1924,7 +1925,7 @@ def save_table3_fdc(n_clicks,data,columns):
 	if n_clicks!=None:
 		table3 = pd.DataFrame.from_dict(data=data)
 		table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
-		upload_file_git(os.path.join(LOCAL_DATA,"sheet2.csv"))
+		upload_file_git("local_data/sheet2.csv")
 		return ["FDC Saved."]
 	else:
 		return [""]
@@ -1935,7 +1936,7 @@ def save_table6_ffr(n_clicks,data,columns):
 	if n_clicks!=None:
 		table6 = pd.DataFrame.from_dict(data=data)
 		table6.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
-		upload_file_git(os.path.join(LOCAL_DATA,"sheet3.csv"))
+		upload_file_git("local_data/sheet3.csv")
 		return ["FFR Saved."]
 	else:
 		return [""]
