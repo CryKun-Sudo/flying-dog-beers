@@ -1173,7 +1173,9 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 
 		if "xls" in list_of_names[0]:
 
-			dff = prepare_xls(os.path.join(UPLOAD_DIRECTORY,list_of_names[0]))		
+			dff = prepare_xls(os.path.join(UPLOAD_DIRECTORY,list_of_names[0]))
+
+			upload_file_git("app_uploaded_files/%s"%list_of_names[0])	
 
 			farbe_options,artikel_options,grobe_options = prepare_lists_artikels_farbes_grobe(dff)
 
