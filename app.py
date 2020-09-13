@@ -50,6 +50,7 @@ server = app.server
 UPLOAD_DIRECTORY = "app_uploaded_files"
 LOCAL_DATA = "local_data"
 
+
 if not os.path.exists(UPLOAD_DIRECTORY):
 	os.makedirs(UPLOAD_DIRECTORY)
 
@@ -90,6 +91,13 @@ reference_ffr["Artikel"] = reference_ffr["Artikel"].astype(str)
 reference_ffr["Type/Form"] = list(reference_ffr["Type/Form"].astype(str).map(replace_typeform))
 
 reference_ffr["Diametre"] = list(reference_ffr["Diametre"].astype(str).map(replace_diametre))
+
+global df_table1
+
+try:
+	df_table1 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet1.csv"))
+except Exception:
+	df_table1 = pd.DataFrame()
 
 
 
@@ -314,8 +322,8 @@ content_table_1 = dbc.Row([
 		dbc.Card(
 
 			dash_table.DataTable(id='table1',
-								 data=df.to_dict('records'),
-								 columns = [{'id': c, 'name': c} for c in df.columns],
+								 data=df_table1.to_dict('records'),
+								 columns = [{'id': c, 'name': c} for c in df_table1.columns],
 								 editable=False,
 								#filter_action="native",
 								sort_action="native",
@@ -330,7 +338,7 @@ content_table_1 = dbc.Row([
 															{
 																'if': {'column_id': c},
 																'textAlign': 'center'
-															} for c in df.columns		
+															} for c in df_table1.columns		
 														],
 								style_data_conditional=[
 															{
@@ -601,8 +609,8 @@ content_second_row = dbc.Row(
 													
 											}
 														),
-
 				
+				html.Div(id='output_save_fdc',style=CARD_TEXT_STYLE),				
 				dbc.Card([dbc.CardBody(html.Div(dbc.Button("Save", color="primary",id="save_stuf",size="lg"),style=CARD_TEXT_STYLE),),]),
 				html.Div(id='intermediate-data', style={'display': 'none'}),
 				html.Div(id='intermediate-data-2', style={'display': 'none'}),
@@ -862,7 +870,7 @@ content_fifth_row = dbc.Row(
 											}
 														),
 
-				
+				html.Div(id='output_save_ffr',style=CARD_TEXT_STYLE),	
 				dbc.Card([dbc.CardBody(html.Div(dbc.Button("Save", color="primary",id="save_stuf_ffr",size="lg"),style=CARD_TEXT_STYLE),),]),
 				# html.Div(id='intermediate-data_ffr', style={'display': 'none'}),
 				# html.Div(id='intermediate-data-2_ffr', style={'display': 'none'}),
@@ -1149,7 +1157,39 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 		return children,dff.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns],summe_artikel,summe_menge,fig1,artikel_options,farbe_options,grobe_options,summe_farbe,summe_gorbe,artikel_options,farbe_options,grobe_options
 		# ,sheet2.to_dict('records'),columns_table3
 	else:
-		return None,None,None,0,0,{},[],[],[],0,0,[],[],[]
+
+		dff = df_table1
+
+		farbe_options,artikel_options,grobe_options = prepare_lists_artikels_farbes_grobe(dff)
+
+		if artikel_selector == "selected":
+			if artikel_values != []:
+				dff = dff[dff.Artikel.isin(artikel_values)]
+
+
+		if farbe_selector == "selected":
+			if farbe_values != []:
+				dff = dff[dff.Farbe.isin(farbe_values)]
+
+		if grobe_selector == "selected":
+			if grobe_values != []:
+				dff = dff[dff.Größe.isin(grobe_values)]
+
+		summe_artikel = len(dff["Artikel"].unique())
+
+		summe_menge = dff["Menge"].sum()
+
+		summe_farbe = len(dff["Farbe"].unique())
+
+		summe_gorbe = len(dff["Größe"].unique())
+
+
+		check = dff.groupby(["Artikel","Farbe"]).sum()["Menge"].reset_index()
+
+		fig1 = px.bar(check,x="Artikel",y="Menge",color="Farbe",barmode="group",hover_name="Menge",title="Menge Pro Artikel")
+		fig1 = fig1.update_layout(xaxis_type='category')
+
+		return "Loaded Saved Sheet1.csv",dff.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns],summe_artikel,summe_menge,fig1,artikel_options,farbe_options,grobe_options,summe_farbe,summe_gorbe,artikel_options,farbe_options,grobe_options
 		# ,None,[]
 
 
@@ -1175,8 +1215,8 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 
 
 @app.callback([Output('table3','data'),Output('table3','columns')],
-			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('table1','data'),Input('table1','columns'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')])
-def filter_table3(artikel_selector,artikel_values,children,data,column,children_mod,children_del):
+			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('table1','data'),Input('table1','columns'),Input('output-confirm_mod','children'),Input('output-confirm_del','children'),Input('output-data-upload', 'children')])
+def filter_table3(artikel_selector,artikel_values,children,data,column,children_mod,children_del,children_upload):
 
 	global reference
 
@@ -1185,8 +1225,8 @@ def filter_table3(artikel_selector,artikel_values,children,data,column,children_
 	else:
 		artikels = reference["Artikel"].unique()
 
-	if data!=None:
-
+	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" not in os.listdir(LOCAL_DATA) )) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
+			
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
 		sheet1["Artikel"] = sheet1["Artikel"].astype(str)
@@ -1207,6 +1247,7 @@ def filter_table3(artikel_selector,artikel_values,children,data,column,children_
 		sheet2["Stuf11"] = 0
 		sheet2["Stuf12"] = 0
 
+
 		columns = []
 
 		for c in sheet2.columns:
@@ -1218,6 +1259,20 @@ def filter_table3(artikel_selector,artikel_values,children,data,column,children_
 		
 
 		#columns = [{'id': c, 'name': c} for c in sheet2.columns]
+
+		return sheet2.to_dict('records'),columns
+
+	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" in os.listdir(LOCAL_DATA)):
+
+		sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet2.csv"))
+
+		columns = []
+
+		for c in sheet2.columns:
+			if "stuf" in c.lower():
+				columns.append({'id':c,'name':c,'editable':True})
+			else:
+				columns.append({'id':c,'name':c,'editable':False})
 
 		return sheet2.to_dict('records'),columns
 
@@ -1611,8 +1666,8 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 ############################
 
 @app.callback([Output('table6','data'),Output('table6','columns')],
-			  [Input('Artikel_Selector_ffr',"value"),Input('dropdown_artikel_ffr','value'),Input('output-confirm_ffr', 'children'),Input('table1','data'),Input('table1','columns'),Input('output-confirm_mod_ffr','children'),Input('output-confirm_del_ffr','children')])
-def filter_table6(artikel_selector,artikel_values,children,data,column,children_mod,children_del):
+			  [Input('Artikel_Selector_ffr',"value"),Input('dropdown_artikel_ffr','value'),Input('output-confirm_ffr', 'children'),Input('table1','data'),Input('table1','columns'),Input('output-confirm_mod_ffr','children'),Input('output-confirm_del_ffr','children'),Input('output-data-upload','children')])
+def filter_table6(artikel_selector,artikel_values,children,data,column,children_mod,children_del,children_upload):
 
 	global reference_ffr
 
@@ -1621,7 +1676,7 @@ def filter_table6(artikel_selector,artikel_values,children,data,column,children_
 	else:
 		artikels = reference_ffr["Artikel"].unique()
 
-	if data!=None:
+	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet3.csv" not in os.listdir(LOCAL_DATA) )) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
 
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
@@ -1656,6 +1711,21 @@ def filter_table6(artikel_selector,artikel_values,children,data,column,children_
 		#columns = [{'id': c, 'name': c} for c in sheet2.columns]
 
 		return sheet2.to_dict('records'),columns
+
+	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet3.csv" in os.listdir(LOCAL_DATA)):
+
+		sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet3.csv"))
+
+		columns = []
+
+		for c in sheet2.columns:
+			if "stuf" in c.lower():
+				columns.append({'id':c,'name':c,'editable':True})
+			else:
+				columns.append({'id':c,'name':c,'editable':False})
+
+		return sheet2.to_dict('records'),columns
+
 
 	else:
 
@@ -1796,6 +1866,32 @@ def update_inter(data,columns):
 		return table4.to_dict('records'),columns	
 
 	return None,[]
+
+
+###########################################
+
+@app.callback([Output('output_save_fdc','children')],
+	[Input('save_stuf', 'n_clicks'),Input('table3','data'),Input('table3','columns')])
+def save_table3_fdc(n_clicks,data,columns):
+	if n_clicks!=None:
+		table3 = pd.DataFrame.from_dict(data=data)
+		table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
+		return ["FDC Saved."]
+	else:
+		return [""]
+
+@app.callback([Output('output_save_ffr','children')],
+	[Input('save_stuf_ffr', 'n_clicks'),Input('table6','data'),Input('table6','columns')])
+def save_table6_ffr(n_clicks,data,columns):
+	if n_clicks!=None:
+		table6 = pd.DataFrame.from_dict(data=data)
+		table6.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
+		return ["FFR Saved."]
+	else:
+		return [""]
+
+
+###########################################
 
 
 
