@@ -1276,8 +1276,6 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 		artikels = reference["Artikel"].unique()
 
 	dff = reference[reference.Artikel.isin(artikels)]
-	
-	upload_file_git("local_data/reference.csv")
 
 	columns = [{'id': c, 'name': c} for c in dff.columns]
 
@@ -1606,7 +1604,7 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/reference.csv")
+			#upload_file_git("local_data/reference.csv")
 
 		
 
@@ -1644,7 +1642,7 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/reference.csv")
+			#upload_file_git("local_data/reference.csv")
 
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
@@ -1676,7 +1674,7 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/reference.csv")
+			#upload_file_git("local_data/reference.csv")
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
@@ -1710,7 +1708,7 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git("local_data/Reference_ffr.csv")
 
 		
 
@@ -1748,7 +1746,7 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git("local_data/Reference_ffr.csv")
 
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
