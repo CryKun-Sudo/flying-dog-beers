@@ -1267,7 +1267,8 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 
 #State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')
 @app.callback([Output('table2','data'),Output('table2','columns')],
-			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],)
+			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
+			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
 def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del):
 
 
