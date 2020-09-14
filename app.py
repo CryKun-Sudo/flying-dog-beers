@@ -1276,8 +1276,6 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 	else:
 		artikels = reference["Artikel"].unique()
 
-	reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
-
 	dff = reference[reference.Artikel.isin(artikels)]
 
 
