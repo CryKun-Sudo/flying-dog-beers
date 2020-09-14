@@ -1267,8 +1267,8 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 #State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')
 @app.callback([Output('table2','data'),Output('table2','columns')],
 			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
-			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
-def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del,children_state,children_mod_state,children_del_state):
+			  )
+def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del):
 	
 	global reference
 
@@ -1288,9 +1288,9 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 
 
 @app.callback([Output('table3','data'),Output('table3','columns')],
-			  [Input('table1','data'),Input('table1','columns'),Input('output-data-upload', 'children'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
-			  [State('table2','data')])
-def filter_table3(data,column,children_upload,children_add,children_mod,children_del,children_add_state,children_mod_state,children_del_state):
+			  [Input('table1','data'),Input('table1','columns'),Input('output-data-upload', 'children'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children'),Input('table2','data')],
+			  )
+def filter_table3(data,column,children_upload,children_add,children_mod,children_del,data_table2):
 
 	global reference
 
