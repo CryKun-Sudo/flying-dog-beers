@@ -1276,7 +1276,8 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 		artikels = reference["Artikel"].unique()
 
 	dff = reference[reference.Artikel.isin(artikels)]
-
+	
+	upload_file_git("local_data/reference.csv")
 
 	columns = [{'id': c, 'name': c} for c in dff.columns]
 
