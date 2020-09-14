@@ -1269,20 +1269,20 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
 			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
 def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del,children_state,children_mod_state,children_del_state):
+	
 	global reference
 
 	
+# 	if artikel_selector == "selected":
+# 		artikels = artikel_values
+# 	else:
+# 		artikels = reference["Artikel"].unique()
 
-	if artikel_selector == "selected":
-		artikels = artikel_values
-	else:
-		artikels = reference["Artikel"].unique()
+# 	dff = reference[reference.Artikel.isin(artikels)]
 
-	dff = reference[reference.Artikel.isin(artikels)]
+	columns = [{'id': c, 'name': c} for c in reference.columns]
 
-	columns = [{'id': c, 'name': c} for c in dff.columns]
-
-	return dff.to_dict('records'),columns
+	return reference.to_dict('records'),columns
 
 
 
