@@ -136,8 +136,6 @@ def replace_diametre(element):
 
 global reference
 
-# reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
-
 reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
 
 reference.loc[reference.Diametre=="105","Diametre"] = "10.5"
@@ -1195,7 +1193,6 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 
 			dff = prepare_xls(os.path.join(UPLOAD_DIRECTORY,list_of_names[0]))
 
-			upload_file_git("app_uploaded_files/%s"%list_of_names[0])	
 
 			farbe_options,artikel_options,grobe_options = prepare_lists_artikels_farbes_grobe(dff)
 
@@ -1273,13 +1270,10 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
 def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del,children_state,children_mod_state,children_del_state):
 
-	global reference
-
 	if artikel_selector == "selected":
 		artikels = artikel_values
 	else:
-		artikels = reference["Artikel"].unique()		
-	
+		artikels = reference["Artikel"].unique()
 
 	dff = reference[reference.Artikel.isin(artikels)]
 
@@ -1313,7 +1307,6 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 		sheet2["Artikel"] = sheet1.groupby(["Artikel"]).sum()["Menge"].index
 		sheet2["Menge"] = sheet1.groupby(["Artikel"]).sum()["Menge"].values
 
-		
 
 		dff = reference[reference.Artikel.isin(artikels)]
 
@@ -1342,12 +1335,9 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
-		sheet2 = pd.read_csv("./local_data/sheet2.csv")
-
-		#sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet2.csv"))
+		sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet2.csv"))
 
 		sheet2["Artikel"] = sheet2["Artikel"].astype(str)
-
 
 		dff = reference[reference.Artikel.isin(artikels)]
 
@@ -2056,4 +2046,4 @@ def update_graph_6(data,columns):
 
 
 if __name__ == '__main__':
-	app.run_server(debug=True)
+	app.run_server(debug=False)
