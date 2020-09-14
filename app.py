@@ -1294,12 +1294,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 	global reference
 
-	if artikel_selector == "selected":
-		artikels = artikel_values
-	else:
-		artikels = reference["Artikel"].unique()
-
-	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" not in os.listdir(LOCAL_DATA) )) or ("sheet2.csv" not in list_file_git("local_data"))) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
+	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" not in os.listdir(LOCAL_DATA))) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
 			
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
