@@ -1271,7 +1271,7 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del,children_state,children_mod_state,children_del_state,table3_state):
 	global reference
 
-	if (children!="") or (children_mod!="") or (children_del!=""):
+	if (children!=None) or (children_mod!=None) or (children_del!=None):
 
 		if artikel_selector == "selected":
 			artikels = artikel_values
