@@ -1612,7 +1612,7 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference = reference.append(to_add,ignore_index=True)
 
-			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+			#reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
 			#upload_file_git("local_data/reference.csv")
 
@@ -1650,7 +1650,7 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference.loc[reference.Artikel==artikel_input] = [[artikel_input,typeform_input,diametre_input]]
 
-			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+			#reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
 			#upload_file_git("local_data/reference.csv")
 
@@ -1682,7 +1682,7 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference = reference.drop(row_ref.index,axis=0)
 
-			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+			#reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
 			#upload_file_git("local_data/reference.csv")
 
