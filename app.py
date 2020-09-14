@@ -98,6 +98,23 @@ def upload_file_git(file_path):
 	update_i+=1
 
 
+def list_file_git(path):
+
+
+	user = "CryKun-Sudo"
+	password = "Mmaladie123!!!"
+	g = Github(user,password)
+	repo = g.get_user().get_repo('Supply_rachida')
+
+	contents = repo.get_contents(path)
+
+	list_files = []
+
+	for con in contents:
+		list_files.append(con.name)
+
+	return list_files
+
 if not os.path.exists(UPLOAD_DIRECTORY):
 	os.makedirs(UPLOAD_DIRECTORY)
 
@@ -1281,7 +1298,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 	else:
 		artikels = reference["Artikel"].unique()
 
-	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" not in os.listdir(LOCAL_DATA) )) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
+	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" not in os.listdir(LOCAL_DATA) )) or ("sheet2.csv" in list_file_git("local_data"))) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
 			
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
@@ -1316,9 +1333,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 		return sheet2.to_dict('records'),columns
 
-	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" in os.listdir(LOCAL_DATA)):
-
-
+	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" in os.listdir(LOCAL_DATA)) or ("sheet2.csv" in list_file_git("local_data")) ):
 
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
@@ -1347,6 +1362,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 			sheet2 = pd.concat([sheet2,row_],ignore_index=True)
 
 		else:
+			
 			sheet2 = sheet2[sheet2.Artikel.isin(dff.Artikel)==True].copy(deep=True)
 
 		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
