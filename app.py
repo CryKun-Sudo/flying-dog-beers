@@ -1298,7 +1298,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 	else:
 		artikels = reference["Artikel"].unique()
 
-	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" not in os.listdir(LOCAL_DATA) )) or ("sheet2.csv" in list_file_git("local_data"))) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
+	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" not in os.listdir(LOCAL_DATA) )) or ("sheet2.csv" not in list_file_git("local_data"))) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
 			
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
@@ -1346,6 +1346,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 		dff["Artikel"] = dff["Artikel"].astype(str)
 
 		if len(dff)>len(sheet2):
+
 			row_ = dff[dff.Artikel.isin(sheet2.Artikel)==False].copy(deep=True)
 
 			row_["Stuf03"] = 0
@@ -1364,6 +1365,17 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 		else:
 			
 			sheet2 = sheet2[sheet2.Artikel.isin(dff.Artikel)==True].copy(deep=True)
+
+			sheet2_ = pd.merge(sheet2,dff,on=["Artikel","Type/Form","Diametre"],how="right")[["Artikel","Stuf03","Stuf11","Stuf12","Menge","Type/Form","Diametre"]].fillna(0)
+
+			sheet2_right = pd.merge(sheet2_,sheet2,on=["Artikel","Stuf03","Stuf11","Stuf12","Menge","Type/Form","Diametre"],how="right")
+
+			sheet2_left = pd.merge(sheet2_,sheet2,on=["Artikel","Stuf03","Stuf11","Stuf12","Menge","Type/Form","Diametre"],how="left")
+
+			sheet2_right["Type/Form"] = sheet2_left["Type/Form"]
+			sheet2_right["Diametre"] = sheet2_left["Diametre"]
+
+			sheet2 = sheet2_right
 
 		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
 
