@@ -387,8 +387,8 @@ content_table_1 = dbc.Row([
 		dbc.Card(
 
 			dash_table.DataTable(id='table1',
-								 data=df_table1.to_dict('records'),
-								 columns = [{'id': c, 'name': c} for c in df_table1.columns],
+								 data=df.to_dict('records'),
+								 columns = [{'id': c, 'name': c} for c in df.columns],
 								 editable=False,
 								filter_action="native",
 								sort_action="native",
@@ -403,7 +403,7 @@ content_table_1 = dbc.Row([
 															{
 																'if': {'column_id': c},
 																'textAlign': 'center'
-															} for c in df_table1.columns		
+															} for c in df.columns		
 														],
 								style_data_conditional=[
 															{
