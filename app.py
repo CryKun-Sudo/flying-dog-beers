@@ -143,6 +143,7 @@ global df_table1
 
 try:
 	df_table1 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet1.csv"))
+	df_table1["Artikel"] = df_table1["Artikel"].astype(str)
 except Exception:
 	df_table1 = pd.DataFrame()
 
@@ -372,7 +373,7 @@ content_table_1 = dbc.Row([
 								 data=df_table1.to_dict('records'),
 								 columns = [{'id': c, 'name': c} for c in df_table1.columns],
 								 editable=False,
-								#filter_action="native",
+								filter_action="native",
 								sort_action="native",
 								sort_mode="multi",
 								row_selectable=False,
@@ -1206,6 +1207,7 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 			fig1 = px.bar(check,x="Artikel",y="Menge",color="Farbe",barmode="group",hover_name="Menge",title="Menge Pro Artikel")
 			fig1 = fig1.update_layout(xaxis_type='category')
 
+			dff["Artikel"] = dff["Artikel"].astype(str)
 
 		return children,dff.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns],summe_artikel,summe_menge,fig1,artikel_options,farbe_options,grobe_options,summe_farbe,summe_gorbe,artikel_options,farbe_options,grobe_options
 		# ,sheet2.to_dict('records'),columns_table3
@@ -1268,8 +1270,9 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 
 
 @app.callback([Output('table3','data'),Output('table3','columns')],
-			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('table1','data'),Input('table1','columns'),Input('output-confirm_mod','children'),Input('output-confirm_del','children'),Input('output-data-upload', 'children')])
-def filter_table3(artikel_selector,artikel_values,children,data,column,children_mod,children_del,children_upload):
+			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('table1','data'),Input('table1','columns'),Input('output-data-upload', 'children'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
+			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
+def filter_table3(artikel_selector,artikel_values,data,column,children_upload,children_add,children_mod,children_del,children_add_state,children_mod_state,children_del_state):
 
 	global reference
 
@@ -1288,8 +1291,6 @@ def filter_table3(artikel_selector,artikel_values,children,data,column,children_
 
 		sheet2["Artikel"] = sheet1.groupby(["Artikel"]).sum()["Menge"].index
 		sheet2["Menge"] = sheet1.groupby(["Artikel"]).sum()["Menge"].values
-
-
 
 
 		dff = reference[reference.Artikel.isin(artikels)]
@@ -1317,7 +1318,40 @@ def filter_table3(artikel_selector,artikel_values,children,data,column,children_
 
 	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" in os.listdir(LOCAL_DATA)):
 
+
+
+		sheet1 = pd.DataFrame.from_dict(data=data)
+
 		sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet2.csv"))
+
+		sheet2["Artikel"] = sheet2["Artikel"].astype(str)
+
+		dff = reference[reference.Artikel.isin(artikels)]
+
+		dff["Artikel"] = dff["Artikel"].astype(str)
+
+		if len(dff)>len(sheet2):
+			row_ = dff[dff.Artikel.isin(sheet2.Artikel)==False].copy(deep=True)
+
+			row_["Stuf03"] = 0
+			row_["Stuf11"] = 0
+			row_["Stuf12"] = 0
+
+			try:
+				row_["Menge"] = sheet1[sheet1.Artikel==row_.Artikel.values[0]]["Menge"].sum()
+			except Exception:
+				row_["Menge"] = 0
+
+			row_ = row_[["Artikel","Stuf03","Stuf11","Stuf12","Menge","Type/Form","Diametre"]].reset_index(drop=True)
+
+			sheet2 = pd.concat([sheet2,row_],ignore_index=True)
+
+		else:
+			sheet2 = sheet2[sheet2.Artikel.isin(dff.Artikel)==True].copy(deep=True)
+
+		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
+
+		upload_file_git("local_data/sheet2.csv")
 
 		columns = []
 
@@ -1791,6 +1825,7 @@ def filter_table6(artikel_selector,artikel_values,children,data,column,children_
 
 	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet3.csv" in os.listdir(LOCAL_DATA)):
 
+
 		sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet3.csv"))
 
 		columns = []
@@ -1930,7 +1965,7 @@ def update_graph_8(data,columns):
 
 
 @app.callback([Output('table4','data'),Output('table4','columns')],
-	[Input('table3', 'data'),Input('table3','columns')])
+	[Input('table3', 'data'),Input('table3','columns')],)
 def update_inter(data,columns):
 	if (data!=None) and (data!=[]):
 		table4 = pd.DataFrame.from_dict(data=data)
