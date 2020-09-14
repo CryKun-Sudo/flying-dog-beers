@@ -1370,17 +1370,6 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 @app.callback([Output('confirm_add', 'displayed'),Output('confirm_add','message')],
 				[Input('submit_form','n_clicks')],
 			  [State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')])
