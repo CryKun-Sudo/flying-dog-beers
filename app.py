@@ -1554,6 +1554,10 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference = reference.append(to_add,ignore_index=True)
 
+			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+
+			upload_file_git("local_data/reference.csv")
+
 		
 
 			return "%s - %s - %s Added to References."%(artikel_input,typeform_input,diametre_input)
@@ -1588,6 +1592,10 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference.loc[reference.Artikel==artikel_input] = [[artikel_input,typeform_input,diametre_input]]
 
+			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+
+			upload_file_git("local_data/reference.csv")
+
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
 
@@ -1615,6 +1623,10 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 			row_ref = reference[reference.Artikel==artikel_input]
 
 			reference = reference.drop(row_ref.index,axis=0)
+
+			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+
+			upload_file_git("local_data/reference.csv")
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
@@ -1645,6 +1657,10 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 			to_add = pd.DataFrame(columns=reference_ffr.columns.values,data=[[artikel_input,typeform_input,diametre_input]])
 
 			reference_ffr = reference_ffr.append(to_add,ignore_index=True)
+
+			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
+
+			upload_file_git("local_data/Reference_ffr.csv")
 
 		
 
@@ -1680,6 +1696,10 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference_ffr.loc[reference_ffr.Artikel==artikel_input] = [[artikel_input,typeform_input,diametre_input]]
 
+			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
+
+			upload_file_git("local_data/Reference_ffr.csv")
+
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
 
@@ -1707,6 +1727,10 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 			row_ref = reference_ffr[reference_ffr.Artikel==artikel_input]
 
 			reference_ffr = reference_ffr.drop(row_ref.index,axis=0)
+
+			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
+
+			upload_file_git("local_data/Reference_ffr.csv")
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
