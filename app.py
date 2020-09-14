@@ -136,7 +136,9 @@ def replace_diametre(element):
 
 global reference
 
-reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
+# reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
+
+reference = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/local_data/reference.csv",index_col=0).reset_index()
 
 reference.loc[reference.Diametre=="105","Diametre"] = "10.5"
 
@@ -1276,7 +1278,7 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 	else:
 		artikels = reference["Artikel"].unique()
 		
-	reference = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/local_data/reference.csv",index_col=0).reset_index()
+	
 
 	dff = reference[reference.Artikel.isin(artikels)]
 
