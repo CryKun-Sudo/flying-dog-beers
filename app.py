@@ -1288,9 +1288,9 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 
 
 @app.callback([Output('table3','data'),Output('table3','columns')],
-			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('table1','data'),Input('table1','columns'),Input('output-data-upload', 'children'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
+			  [Input('table1','data'),Input('table1','columns'),Input('output-data-upload', 'children'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
 			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
-def filter_table3(artikel_selector,artikel_values,data,column,children_upload,children_add,children_mod,children_del,children_add_state,children_mod_state,children_del_state):
+def filter_table3(data,column,children_upload,children_add,children_mod,children_del,children_add_state,children_mod_state,children_del_state):
 
 	global reference
 
@@ -1306,7 +1306,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 		sheet2["Menge"] = sheet1.groupby(["Artikel"]).sum()["Menge"].values
 
 
-		dff = reference[reference.Artikel.isin(artikels)]
+		dff = reference
 
 		sheet2 = pd.merge(sheet2,dff, on='Artikel')
 
@@ -1337,7 +1337,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 		sheet2["Artikel"] = sheet2["Artikel"].astype(str)
 
-		dff = reference[reference.Artikel.isin(artikels)]
+		dff = reference
 
 		dff["Artikel"] = dff["Artikel"].astype(str)
 
@@ -1375,7 +1375,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
 
-		upload_file_git("local_data/sheet2.csv")
+		#upload_file_git("local_data/sheet2.csv")
 
 		columns = []
 
@@ -1783,7 +1783,7 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git("local_data/Reference_ffr.csv")
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
@@ -2008,7 +2008,7 @@ def save_table3_fdc(n_clicks,data,columns):
 	if n_clicks!=None:
 		table3 = pd.DataFrame.from_dict(data=data)
 		table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
-		upload_file_git("local_data/sheet2.csv")
+		#upload_file_git("local_data/sheet2.csv")
 		return ["FDC Saved."]
 	else:
 		return [""]
@@ -2020,7 +2020,7 @@ def save_table6_ffr(n_clicks,data,columns):
 	if n_clicks!=None:
 		table6 = pd.DataFrame.from_dict(data=data)
 		table6.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
-		upload_file_git("local_data/sheet3.csv")
+		#upload_file_git("local_data/sheet3.csv")
 		return ["FFR Saved."]
 	else:
 		return [""]
