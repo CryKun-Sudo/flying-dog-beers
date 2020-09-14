@@ -498,8 +498,8 @@ content_second_row = dbc.Row(
 			dbc.Card([
 				html.H4("REF' FDC", className="card-title",style=TEXT_STYLE),
 				dash_table.DataTable(id='table2',
-								 data=reference.to_dict('records'),
-								 columns = [{'id': c, 'name': c,'deletable':False,'renamable':False} for c in reference.columns],
+								 data=df.to_dict('records'),
+								 columns = [{'id': c, 'name': c,'deletable':False,'renamable':False} for c in df.columns],
 								 editable=False,
 								filter_action="native",
 								sort_action="native",
@@ -517,7 +517,7 @@ content_second_row = dbc.Row(
 															{
 																'if': {'column_id': c},
 																'textAlign': 'center'
-															} for c in reference.columns		
+															} for c in df.columns		
 														],
 								style_data_conditional=[
 															{
