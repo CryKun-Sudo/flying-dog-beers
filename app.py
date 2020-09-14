@@ -1289,7 +1289,7 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 
 @app.callback([Output('table3','data'),Output('table3','columns')],
 			  [Input('table1','data'),Input('table1','columns'),Input('output-data-upload', 'children'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
-			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
+			  [State('table2','data')])
 def filter_table3(data,column,children_upload,children_add,children_mod,children_del,children_add_state,children_mod_state,children_del_state):
 
 	global reference
@@ -1329,7 +1329,7 @@ def filter_table3(data,column,children_upload,children_add,children_mod,children
 
 		return sheet2.to_dict('records'),columns
 
-	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" in os.listdir(LOCAL_DATA)) or ("sheet2.csv" in list_file_git("local_data")) ):
+	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" in os.listdir(LOCAL_DATA)) :
 
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
