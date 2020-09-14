@@ -1278,8 +1278,7 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 	if artikel_selector == "selected":
 		artikels = artikel_values
 	else:
-		artikels = reference["Artikel"].unique()
-		
+		artikels = reference["Artikel"].unique()		
 	
 
 	dff = reference[reference.Artikel.isin(artikels)]
@@ -1314,8 +1313,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 		sheet2["Artikel"] = sheet1.groupby(["Artikel"]).sum()["Menge"].index
 		sheet2["Menge"] = sheet1.groupby(["Artikel"]).sum()["Menge"].values
 
-		reference = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/local_data/reference.csv",index_col=0).reset_index()
-
+		
 
 		dff = reference[reference.Artikel.isin(artikels)]
 
@@ -1350,7 +1348,6 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 		sheet2["Artikel"] = sheet2["Artikel"].astype(str)
 
-		reference = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/local_data/reference.csv",index_col=0).reset_index()
 
 		dff = reference[reference.Artikel.isin(artikels)]
 
