@@ -138,7 +138,7 @@ global reference
 
 # reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
 
-reference = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/local_data/reference.csv",index_col=0).reset_index()
+reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
 
 reference.loc[reference.Diametre=="105","Diametre"] = "10.5"
 
@@ -1342,7 +1342,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
-		sheet2 = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/local_data/sheet2.csv",index_col=0).reset_index()
+		sheet2 = pd.read_csv("./local_data/sheet2.csv")
 
 		#sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet2.csv"))
 
