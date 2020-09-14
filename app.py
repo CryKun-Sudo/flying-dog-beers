@@ -1275,6 +1275,8 @@ def filter_table2(artikel_selector,artikel_values,children,children_mod,children
 		artikels = artikel_values
 	else:
 		artikels = reference["Artikel"].unique()
+		
+	reference = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/local_data/reference.csv",index_col=0).reset_index()
 
 	dff = reference[reference.Artikel.isin(artikels)]
 
