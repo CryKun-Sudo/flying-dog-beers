@@ -1267,8 +1267,8 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 #State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')
 @app.callback([Output('table2','data'),Output('table2','columns')],
 			  [Input('Artikel_Selector',"value"),Input('dropdown','value'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
-			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
-def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del,children_state,children_mod_state,children_del_state):
+			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children'),State('table3','data')])
+def filter_table2(artikel_selector,artikel_values,children,children_mod,children_del,children_state,children_mod_state,children_del_state,table3_state):
 	global reference
 	if artikel_selector == "selected":
 		artikels = artikel_values
@@ -1399,6 +1399,8 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 				[Input('submit_form','n_clicks')],
 			  [State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')])
 def display_confirm(submit_n_clicks,artikel_input,typeform_input,diametre_input):
+	
+	global reference
 
 	if (submit_n_clicks) and (artikel_input!=None) and (typeform_input!=None) and (diametre_input!=None):
 
@@ -1425,6 +1427,8 @@ def display_confirm(submit_n_clicks,artikel_input,typeform_input,diametre_input)
 				[Input('submit_form_mod','n_clicks')],
 			  [State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')])
 def display_confirm_mod(submit_n_clicks,artikel_input,typeform_input,diametre_input):
+	
+	global reference
 
 	if (submit_n_clicks) and (artikel_input!=None) and (typeform_input!=None) and (diametre_input!=None):
 
@@ -1451,6 +1455,8 @@ def display_confirm_mod(submit_n_clicks,artikel_input,typeform_input,diametre_in
 				[Input('submit_form_del','n_clicks')],
 			  [State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')])
 def display_confirm_del(submit_n_clicks,artikel_input,typeform_input,diametre_input):
+	
+	global reference
 
 	if (submit_n_clicks) and (artikel_input!=None) and (typeform_input!=None) and (diametre_input!=None):
 
