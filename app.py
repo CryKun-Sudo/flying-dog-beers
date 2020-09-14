@@ -1298,7 +1298,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 	else:
 		artikels = reference["Artikel"].unique()
 
-	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" not in os.listdir(LOCAL_DATA) )) or ("sheet2.csv" in list_file_git("local_data"))) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
+	if ((data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" in list_file_git("local_data")) or ((data!=None) and (children_upload!="Loaded Saved Sheet1.csv")):
 			
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
@@ -1333,7 +1333,7 @@ def filter_table3(artikel_selector,artikel_values,data,column,children_upload,ch
 
 		return sheet2.to_dict('records'),columns
 
-	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and (("sheet2.csv" in os.listdir(LOCAL_DATA)) or ("sheet2.csv" in list_file_git("local_data")) ):
+	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" in list_file_git("local_data")):
 
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
