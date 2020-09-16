@@ -54,9 +54,11 @@ UPLOAD_DIRECTORY = "app_uploaded_files"
 LOCAL_DATA = "local_data"
 
 
+
+	
 global update_i
 
-update_i=0
+update_i = 0
 
 def upload_file_git(file_path):
 
@@ -84,12 +86,13 @@ def upload_file_git(file_path):
 	base_tree = repo.get_git_tree(master_sha)
 	element_list = list()
 	for i, entry in enumerate(file_list):
-	    with open(entry) as input_file:
-	        data = input_file.read()
-	    if entry.endswith('.png'):
-	        data = base64.b64encode(data)
-	    element = InputGitTreeElement(file_names[i], '100644', 'blob', data)
-	    element_list.append(element)
+		
+		data = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/%s"%file_names[i],index_col=0).reset_index().to_csv(index=False)
+
+		if entry.endswith('.png'):
+			data = base64.b64encode(data)
+		element = InputGitTreeElement(file_names[i], '100644', 'blob', data)
+		element_list.append(element)
 	tree = repo.create_git_tree(element_list, base_tree)
 	parent = repo.get_git_commit(master_sha)
 	commit = repo.create_git_commit(commit_message, tree, [parent])
@@ -2076,4 +2079,4 @@ def update_graph_6(data,columns):
 
 
 if __name__ == '__main__':
-	app.run_server(debug=False)
+	app.run_server(debug=True)
