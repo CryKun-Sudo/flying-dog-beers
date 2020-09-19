@@ -1770,8 +1770,6 @@ def filter_table6(children,data,column,children_mod,children_del,children_upload
 		sheet2["Menge"] = sheet1.groupby(["Artikel"]).sum()["Menge"].values
 
 
-
-
 		dff = reference_ffr
 
 		sheet2 = pd.merge(sheet2,dff, on='Artikel')
@@ -1857,7 +1855,7 @@ def filter_table6(children,data,column,children_mod,children_del,children_upload
 			else:
 				columns.append({'id':c,'name':c,'editable':False})
 
-		return sheet2.to_dict('records'),columns,columns,dff.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns]
+		return sheet2.to_dict('records'),columns,dff.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns]
 
 	else:
 
