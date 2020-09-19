@@ -1344,9 +1344,9 @@ def filter_table3(data,column,children_upload,children_add,children_mod,children
 
 		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
 
-		upload_file_git("local_data/sheet2.csv")
+		# upload_file_git("local_data/sheet2.csv")
 
-		upload_file_git("local_data/reference.csv")
+		# upload_file_git("local_data/reference.csv")
 
 		columns = []
 
