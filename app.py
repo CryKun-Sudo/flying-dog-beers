@@ -1,8 +1,6 @@
 import pandas as pd
 import plotly.express as px
-from sqlalchemy import create_engine
-import pymysql
-from mysql.connector import connection
+
 
 import os
 
