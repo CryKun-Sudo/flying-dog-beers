@@ -1191,25 +1191,25 @@ def update_output(list_of_contents, artikel_selector,farbe_selector, grobe_selec
 
 
 #State('example-artikel-grid','value'),State('example-typeform-grid','value'),State('example-Diametre-grid','value')
-@app.callback([Output('table2','data'),Output('table2','columns')],
-			  [Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
-			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
-def filter_table2(children,children_mod,children_del,children_state,children_mod_state,children_del_state):
+# @app.callback([Output('table2','data'),Output('table2','columns')],
+# 			  [Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
+# 			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
+# def filter_table2(children,children_mod,children_del,children_state,children_mod_state,children_del_state):
 
-	global reference
-	
-	dff = reference
+# 	global reference
 
-	#upload_file_git("local_data/reference.csv")
+# 	dff = reference
 
-
-	columns = [{'id': c, 'name': c} for c in dff.columns]
-
-	return dff.to_dict('records'),columns
+# 	#upload_file_git("local_data/reference.csv")
 
 
+# 	columns = [{'id': c, 'name': c} for c in dff.columns]
 
-@app.callback([Output('table3','data'),Output('table3','columns')],
+# 	return dff.to_dict('records'),columns
+
+
+
+@app.callback([Output('table3','data'),Output('table3','columns'),Output('table2','data'),Output('table2','columns')],
 			  [Input('table1','data'),Input('table1','columns'),Input('output-data-upload', 'children'),Input('output-confirm', 'children'),Input('output-confirm_mod','children'),Input('output-confirm_del','children')],
 			  [State('output-confirm', 'children'),State('output-confirm_mod','children'),State('output-confirm_del','children')])
 def filter_table3(data,column,children_upload,children_add,children_mod,children_del,children_add_state,children_mod_state,children_del_state):
@@ -1251,7 +1251,7 @@ def filter_table3(data,column,children_upload,children_add,children_mod,children
 
 		#columns = [{'id': c, 'name': c} for c in sheet2.columns]
 
-		return sheet2.to_dict('records'),columns
+		return sheet2.to_dict('records'),columns,reference.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns]
 
 	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet2.csv" in os.listdir(LOCAL_DATA)):
 
@@ -1315,11 +1315,11 @@ def filter_table3(data,column,children_upload,children_add,children_mod,children
 			else:
 				columns.append({'id':c,'name':c,'editable':False})
 
-		return sheet2.to_dict('records'),columns
+		return sheet2.to_dict('records'),columns,reference.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns]
 
 	else:
 
-		return None,[]
+		return None,[],None,[]
 
 
 
