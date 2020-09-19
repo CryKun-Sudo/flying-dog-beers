@@ -1520,20 +1520,20 @@ def display_confirm_del(submit_n_clicks,artikel_input,typeform_input,diametre_in
 		############################""
 
 
-@app.callback([Output('table5','data'),Output('table5','columns')],
-			  [Input('output-confirm_ffr', 'children'),Input('output-confirm_mod_ffr','children'),Input('output-confirm_del_ffr','children')],
-			  [State('output-confirm_ffr', 'children'),State('output-confirm_mod_ffr','children'),State('output-confirm_del_ffr','children')])
-def filter_table5(children,children_mod,children_del,children_state,children_mod_state,children_del_state):
+# @app.callback([Output('table5','data'),Output('table5','columns')],
+# 			  [Input('output-confirm_ffr', 'children'),Input('output-confirm_mod_ffr','children'),Input('output-confirm_del_ffr','children')],
+# 			  [State('output-confirm_ffr', 'children'),State('output-confirm_mod_ffr','children'),State('output-confirm_del_ffr','children')])
+# def filter_table5(children,children_mod,children_del,children_state,children_mod_state,children_del_state):
 
-	global reference_ffr
-
-
-	dff = reference_ffr
+# 	global reference_ffr
 
 
-	columns = [{'id': c, 'name': c} for c in dff.columns]
+# 	dff = reference_ffr
 
-	return dff.to_dict('records'),columns		
+
+# 	columns = [{'id': c, 'name': c} for c in dff.columns]
+
+# 	return dff.to_dict('records'),columns		
 
 
 
@@ -1750,7 +1750,7 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 ############################
 
-@app.callback([Output('table6','data'),Output('table6','columns')],
+@app.callback([Output('table6','data'),Output('table6','columns'),Output('table5','data'),Output('table5','columns')],
 			  [Input('output-confirm_ffr', 'children'),Input('table1','data'),Input('table1','columns'),Input('output-confirm_mod_ffr','children'),Input('output-confirm_del_ffr','children'),Input('output-data-upload','children')],
 			  [State('output-confirm_mod_ffr','children'),State('output-confirm_del_ffr','children'),State('output-data-upload','children')])
 def filter_table6(children,data,column,children_mod,children_del,children_upload,children_add_state,children_mod_state,children_del_state):
@@ -1792,7 +1792,7 @@ def filter_table6(children,data,column,children_mod,children_del,children_upload
 
 		#columns = [{'id': c, 'name': c} for c in sheet2.columns]
 
-		return sheet2.to_dict('records'),columns
+		return sheet2.to_dict('records'),columns,dff.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns]
 
 	elif (data!=None) and (children_upload=="Loaded Saved Sheet1.csv") and ("sheet3.csv" in os.listdir(LOCAL_DATA)):
 
@@ -1851,11 +1851,11 @@ def filter_table6(children,data,column,children_mod,children_del,children_upload
 			else:
 				columns.append({'id':c,'name':c,'editable':False})
 
-		return sheet2.to_dict('records'),columns
+		return sheet2.to_dict('records'),columns,columns,dff.to_dict('records'),[{'id': c, 'name': c} for c in dff.columns]
 
 	else:
 
-		return None,[]
+		return None,[],None,[]
 
 
 ############################
