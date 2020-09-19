@@ -1,9 +1,11 @@
 import pandas as pd
 import plotly.express as px
+from sqlalchemy import create_engine
+import pymysql
+from mysql.connector import connection
 
 import os
 
-import dash
 import dash_table
 import numpy as np
 
@@ -18,11 +20,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
-import plotly.express as px
-
-import dash_core_components as dcc
-import dash_bootstrap_components as dbc
-import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import re
 
@@ -32,20 +29,18 @@ import io
 
 import random
 
-import dash
+
 from dash.dependencies import Input, Output, State
-import dash_core_components as dcc
-import dash_html_components as html
-import dash_table
 import xlrd
 import json
 
-from github import Github
-from github import InputGitTreeElement
-
 from dash import no_update
 
-import pandas as pd
+
+def open_browser():
+	webbrowser.open_new("http://localhost:8050")
+
+
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP,'https://codepen.io/chriddyp/pen/bWLwgP.css'],suppress_callback_exceptions=True)
 server = app.server
 
@@ -55,71 +50,6 @@ LOCAL_DATA = "local_data"
 
 
 
-	
-global update_i
-
-update_i = 0
-
-def upload_file_git(file_path):
-
-	global update_i
-
-	user = "CryKun-Sudo"
-	password = "Mmaladie123!!!"
-	g = Github(user,password)
-	repo = g.get_user().get_repo('Supply_rachida')
-
-	file_list = [
-
-	file_path
-
-	]
-
-	file_names = [
-	   
-	   file_path
-	]
-
-	commit_message = 'python update %s'%update_i
-	master_ref = repo.get_git_ref('heads/master')
-	master_sha = master_ref.object.sha
-	base_tree = repo.get_git_tree(master_sha)
-	element_list = list()
-	for i, entry in enumerate(file_list):
-		
-		data = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/%s"%file_names[i],index_col=0).reset_index().to_csv(index=False)
-
-		if entry.endswith('.png'):
-			data = base64.b64encode(data)
-		element = InputGitTreeElement(file_names[i], '100644', 'blob', data)
-		element_list.append(element)
-	tree = repo.create_git_tree(element_list, base_tree)
-	parent = repo.get_git_commit(master_sha)
-	commit = repo.create_git_commit(commit_message, tree, [parent])
-	master_ref.edit(commit.sha)
-
-	update_i+=1
-
-
-def list_file_git(path):
-
-
-	user = "CryKun-Sudo"
-	password = "Mmaladie123!!!"
-	g = Github(user,password)
-	repo = g.get_user().get_repo('Supply_rachida')
-
-	contents = repo.get_contents(path)
-
-	list_files = []
-
-	for con in contents:
-		list_files.append(con.name)
-
-	return list_files
-
-if not os.path.exists(UPLOAD_DIRECTORY):
-	os.makedirs(UPLOAD_DIRECTORY)
 
 def replace_typeform(element):
 	element = element.strip(' ').lower()
@@ -140,6 +70,10 @@ def replace_diametre(element):
 global reference
 
 reference = pd.read_csv(os.path.join(LOCAL_DATA,"reference.csv"))
+
+#reference = get_mysqldb("reference")
+
+#reference.columns = ["Artikel","Type/Form","Diametre"]
 
 reference.loc[reference.Diametre=="105","Diametre"] = "10.5"
 
@@ -1153,9 +1087,9 @@ def prepare_xls(xls_file_path):
 	sheet1 = sheet1.drop(nan_rows_index,axis=0).reset_index(drop=True)
 	for col in sheet1.columns:
 		sheet1[col] = sheet1[col].astype(int)
-	#sheet1.to_csv(os.path.join(LOCAL_DATA,"sheet1.csv"),index=False,encoding="utf-8")
+	sheet1.to_csv(os.path.join(LOCAL_DATA,"sheet1.csv"),index=False,encoding="utf-8")
 
-	upload_file_git("local_data/sheet1.csv")
+	#upload_file_git("local_data/sheet1.csv")
 
 	return sheet1
 
@@ -1275,7 +1209,7 @@ def filter_table2(children,children_mod,children_del,children_state,children_mod
 	
 	dff = reference
 
-	upload_file_git("local_data/reference.csv")
+	#upload_file_git("local_data/reference.csv")
 
 
 	columns = [{'id': c, 'name': c} for c in dff.columns]
@@ -1372,9 +1306,9 @@ def filter_table3(data,column,children_upload,children_add,children_mod,children
 
 			sheet2 = sheet2_right
 
-		#sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
+		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
 
-		upload_file_git("local_data/sheet2.csv")
+		#upload_file_git("local_data/sheet2.csv")
 
 		columns = []
 
@@ -1597,9 +1531,9 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference = reference.append(to_add,ignore_index=True)
 
-			#reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/reference.csv")
+			#upload_file_git("local_data/reference.csv")
 
 		
 
@@ -1635,9 +1569,9 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference.loc[reference.Artikel==artikel_input] = [[artikel_input,typeform_input,diametre_input]]
 
-			#reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/reference.csv")
+			#upload_file_git("local_data/reference.csv")
 
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
@@ -1667,9 +1601,9 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference = reference.drop(row_ref.index,axis=0)
 
-			#reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
+			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/reference.csv")
+			#upload_file_git("local_data/reference.csv")
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
@@ -1701,9 +1635,9 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference_ffr = reference_ffr.append(to_add,ignore_index=True)
 
-			#reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
+			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git("local_data/Reference_ffr.csv")
 
 		
 
@@ -1739,9 +1673,9 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference_ffr.loc[reference_ffr.Artikel==artikel_input] = [[artikel_input,typeform_input,diametre_input]]
 
-			#reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
+			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git("local_data/Reference_ffr.csv")
 
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
@@ -1771,9 +1705,9 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference_ffr = reference_ffr.drop(row_ref.index,axis=0)
 
-			#reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
+			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git("local_data/Reference_ffr.csv")
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
@@ -1874,9 +1808,9 @@ def filter_table6(children,data,column,children_mod,children_del,children_upload
 
 			sheet2 = sheet2_right
 
-		#sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
+		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
 
-		upload_file_git("local_data/sheet2.csv")
+		#upload_file_git("local_data/sheet2.csv")
 
 		columns = []
 
@@ -2036,8 +1970,8 @@ def save_table3_fdc(n_clicks,data,columns):
 	global update_i
 	if n_clicks!=None:
 		table3 = pd.DataFrame.from_dict(data=data)
-		#table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
-		upload_file_git("local_data/sheet2.csv")
+		table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
+		#upload_file_git("local_data/sheet2.csv")
 		return ["FDC Saved."]
 	else:
 		return [""]
@@ -2048,8 +1982,8 @@ def save_table6_ffr(n_clicks,data,columns):
 	global update_i
 	if n_clicks!=None:
 		table6 = pd.DataFrame.from_dict(data=data)
-		#table6.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
-		upload_file_git("local_data/sheet3.csv")
+		table6.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
+		#upload_file_git("local_data/sheet3.csv")
 		return ["FFR Saved."]
 	else:
 		return [""]
@@ -2076,6 +2010,7 @@ def update_graph_6(data,columns):
 
 	else:
 		return no_update
+
 
 
 if __name__ == '__main__':
