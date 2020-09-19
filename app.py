@@ -61,7 +61,7 @@ def upload_file_git(file_listt):
 	for i, entry in enumerate(file_list):
 
 		data = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/%s"%file_names[i],index_col=0).reset_index().to_csv(index=False)
-		
+
 		if entry.endswith('.png'):
 			data = base64.b64encode(data)
 		element = InputGitTreeElement(file_names[i], '100644', 'blob', data)
@@ -2002,7 +2002,7 @@ def save_table3_fdc(n_clicks,data,columns):
 	if n_clicks!=None:
 		table3 = pd.DataFrame.from_dict(data=data)
 		table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
-		upload_file_git(["local_data/sheet2.csv","loca"])
+		upload_file_git(["local_data/sheet2.csv"])
 		return ["FDC Saved."]
 	else:
 		return [""]
