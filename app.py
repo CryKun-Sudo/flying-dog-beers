@@ -41,7 +41,7 @@ UPLOAD_DIRECTORY = "app_uploaded_files"
 LOCAL_DATA = "local_data"
 
 
-def upload_file_git(file_path):
+def upload_file_git(file_listt):
 
 	global update_i
 
@@ -50,16 +50,8 @@ def upload_file_git(file_path):
 	g = Github(user,password)
 	repo = g.get_user().get_repo('Supply_rachida')
 
-	file_list = [
-
-	file_path
-
-	]
-
-	file_names = [
-	   
-	   file_path
-	]
+	file_list = file_listt
+	file_names = file_listt
 
 	commit_message = 'python update %s'%update_i
 	master_ref = repo.get_git_ref('heads/master')
@@ -67,8 +59,9 @@ def upload_file_git(file_path):
 	base_tree = repo.get_git_tree(master_sha)
 	element_list = list()
 	for i, entry in enumerate(file_list):
-		with open(entry) as input_file:
-			data = input_file.read()
+
+		data = pd.read_csv("https://raw.githubusercontent.com/CryKun-Sudo/Supply_rachida/master/%s"%file_names[i],index_col=0).reset_index().to_csv(index=False)
+		
 		if entry.endswith('.png'):
 			data = base64.b64encode(data)
 		element = InputGitTreeElement(file_names[i], '100644', 'blob', data)
@@ -1118,7 +1111,7 @@ def prepare_xls(xls_file_path):
 		sheet1[col] = sheet1[col].astype(int)
 	sheet1.to_csv(os.path.join(LOCAL_DATA,"sheet1.csv"),index=False,encoding="utf-8")
 
-	upload_file_git("local_data/sheet1.csv")
+	upload_file_git(["local_data/sheet1.csv"])
 
 	return sheet1
 
@@ -1344,9 +1337,9 @@ def filter_table3(data,column,children_upload,children_add,children_mod,children
 
 		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
 
-		# upload_file_git("local_data/sheet2.csv")
+		# upload_file_git(["local_data/sheet2.csv"])
 
-		# upload_file_git("local_data/reference.csv")
+		# upload_file_git(["local_data/reference.csv"])
 
 		columns = []
 
@@ -1571,7 +1564,7 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			#upload_file_git("local_data/reference.csv")
+			#upload_file_git(["local_data/reference.csv"])
 
 		
 
@@ -1609,7 +1602,7 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			#upload_file_git("local_data/reference.csv")
+			#upload_file_git(["local_data/reference.csv"])
 
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
@@ -1641,7 +1634,7 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference.to_csv(os.path.join(LOCAL_DATA,"reference.csv"),index=False,encoding="utf-8")
 
-			#upload_file_git("local_data/reference.csv")
+			#upload_file_git(["local_data/reference.csv"])
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
@@ -1675,7 +1668,7 @@ def update_output(submit_n_clicks,artikel_input,typeform_input,diametre_input):
 
 			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			#upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git(["local_data/Reference_ffr.csv"])
 
 		
 
@@ -1713,7 +1706,7 @@ def update_output_mod(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			#upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git(["local_data/Reference_ffr.csv"])
 
 			return "Reference %s, %s, %s Modified to : %s, %s, %s"%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0],artikel_input,typeform_input,diametre_input)
 	else:
@@ -1745,7 +1738,7 @@ def update_output_del(submit_n_clicks,artikel_input,typeform_input,diametre_inpu
 
 			reference_ffr.to_csv(os.path.join(LOCAL_DATA,"Reference_ffr.csv"),index=False,encoding="utf-8")
 
-			#upload_file_git("local_data/Reference_ffr.csv")
+			#upload_file_git(["local_data/Reference_ffr.csv"])
 
 			return "Reference %s, %s, %s Deleted From References."%(artikel_input,row_ref["Type/Form"].values[0],row_ref["Diametre"].values[0])
 	else:
@@ -1848,7 +1841,7 @@ def filter_table6(children,data,column,children_mod,children_del,children_upload
 
 		sheet2.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
 
-		#upload_file_git("local_data/sheet2.csv")
+		#upload_file_git(["local_data/sheet2.csv"])
 
 		columns = []
 
@@ -2005,11 +1998,11 @@ def update_inter(data,columns):
 @app.callback([Output('output_save_fdc','children')],
 	[Input('save_stuf', 'n_clicks'),Input('table3','data'),Input('table3','columns')])
 def save_table3_fdc(n_clicks,data,columns):
-	global update_i
+	global reference
 	if n_clicks!=None:
 		table3 = pd.DataFrame.from_dict(data=data)
 		table3.to_csv(os.path.join(LOCAL_DATA,"sheet2.csv"),index=False,encoding="utf-8")
-		#upload_file_git("local_data/sheet2.csv")
+		upload_file_git(["local_data/sheet2.csv","loca"])
 		return ["FDC Saved."]
 	else:
 		return [""]
@@ -2017,11 +2010,11 @@ def save_table3_fdc(n_clicks,data,columns):
 @app.callback([Output('output_save_ffr','children')],
 	[Input('save_stuf_ffr', 'n_clicks'),Input('table6','data'),Input('table6','columns')])
 def save_table6_ffr(n_clicks,data,columns):
-	global update_i
+	global reference_ffr
 	if n_clicks!=None:
 		table6 = pd.DataFrame.from_dict(data=data)
 		table6.to_csv(os.path.join(LOCAL_DATA,"sheet3.csv"),index=False,encoding="utf-8")
-		#upload_file_git("local_data/sheet3.csv")
+		upload_file_git(["local_data/sheet3.csv"])
 		return ["FFR Saved."]
 	else:
 		return [""]
