@@ -1256,7 +1256,13 @@ def filter_table3(data,column,children_upload,children_add,children_mod,children
 
 		sheet1 = pd.DataFrame.from_dict(data=data)
 
-		sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet2.csv"))
+		try:
+			if len(sheet2)>0:
+				pass
+		except Exception:
+			sheet2 = pd.read_csv(os.path.join(LOCAL_DATA,"sheet2.csv"))
+
+
 
 		sheet2["Artikel"] = sheet2["Artikel"].astype(str)
 
