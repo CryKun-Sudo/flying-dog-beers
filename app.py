@@ -32,9 +32,6 @@ import json
 from dash import no_update
 
 
-def open_browser():
-	webbrowser.open_new("http://localhost:8050")
-
 
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP,'https://codepen.io/chriddyp/pen/bWLwgP.css'],suppress_callback_exceptions=True)
 server = app.server
@@ -42,8 +39,6 @@ server = app.server
 
 UPLOAD_DIRECTORY = "app_uploaded_files"
 LOCAL_DATA = "local_data"
-
-
 
 
 def replace_typeform(element):
